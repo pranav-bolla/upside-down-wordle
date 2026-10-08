@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
-import { GAME_NAME, TAGLINE } from "@/lib/config";
+import { buildOrigin, GAME_NAME, TAGLINE } from "@/lib/config";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -8,17 +8,24 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+const SHARE_TITLE = `${GAME_NAME} — can you read upside down?`;
+
+// The preview image comes from opengraph-image.tsx and twitter-image.tsx.
 export const metadata: Metadata = {
+  metadataBase: new URL(buildOrigin()),
   title: `${GAME_NAME} — read the upside-down word`,
   description: TAGLINE,
+  applicationName: GAME_NAME,
   openGraph: {
-    title: GAME_NAME,
+    title: SHARE_TITLE,
     description: TAGLINE,
+    siteName: GAME_NAME,
     type: "website",
+    url: "/",
   },
   twitter: {
-    card: "summary",
-    title: GAME_NAME,
+    card: "summary_large_image",
+    title: SHARE_TITLE,
     description: TAGLINE,
   },
 };

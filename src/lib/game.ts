@@ -25,14 +25,9 @@ export function createGame(day: number): GameState {
   };
 }
 
-/** Capitals matter: only the surrounding whitespace is forgiven. */
+/** Capitalisation and surrounding whitespace are forgiven. */
 export function normalizeGuess(raw: string): string {
-  return raw.trim();
-}
-
-/** Right letters, wrong capitalisation. */
-export function isCaseMiss(guess: string, word: string): boolean {
-  return guess !== word && guess.toLowerCase() === word.toLowerCase();
+  return raw.trim().toLowerCase();
 }
 
 /** Index of the round still being played, or -1 once the day is finished. */
@@ -71,7 +66,7 @@ export function applyGuess(
   let result: GuessResult = "wrong";
   let status: RoundStatus = "playing";
 
-  if (guess === words[index]) {
+  if (guess === words[index].toLowerCase()) {
     result = "correct";
     status = "won";
   } else if (guesses.length >= MAX_GUESSES) {

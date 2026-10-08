@@ -48,8 +48,8 @@ export default function InstructionsModal({ onClose }: InstructionsModalProps) {
       </ul>
 
       <p className="mt-6 border-t border-line pt-4 text-sm text-muted">
-        Three words a day, five guesses each. Capitals count, so type the word exactly as
-        it appears. Everyone gets the same words, and new ones arrive at midnight UTC.
+        Three words a day, five guesses each. Everyone gets the same words, and new ones
+        arrive at midnight UTC.
       </p>
       <p className="mt-3 text-xs text-muted/80">{TAGLINE}</p>
     </Modal>

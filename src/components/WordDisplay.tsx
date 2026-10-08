@@ -11,10 +11,9 @@ interface WordDisplayProps {
 export function estimateEms(word: string): number {
   let ems = 0;
   for (const letter of word) {
-    if ("mwMW".includes(letter)) ems += 0.95;
-    else if ("ijlI".includes(letter)) ems += 0.32;
+    if ("mw".includes(letter)) ems += 0.95;
+    else if ("ijl".includes(letter)) ems += 0.32;
     else if ("ftr".includes(letter)) ems += 0.45;
-    else if (letter !== letter.toLowerCase()) ems += 0.74;
     else ems += 0.64;
   }
   return ems;

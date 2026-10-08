@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
   guessesRemaining,
-  isCaseMiss,
   wrongGuesses,
   type GameState,
   type RoundState,
@@ -23,15 +22,11 @@ interface GameCardProps {
 }
 
 function commentary(round: RoundState, roundIndex: number, word: string): string {
-  const missed = wrongGuesses(round);
-  const misses = missed.length;
+  const misses = wrongGuesses(round).length;
   if (round.status === "won") {
     return misses === 0 ? "Incredible. You have eyes." : "Correct. Eventually.";
   }
   if (round.status === "lost") return `It said “${word}”. We turned it around for you.`;
-  if (misses >= 1 && isCaseMiss(missed[misses - 1], word)) {
-    return "Right letters. Wrong capitals. They count.";
-  }
   if (misses >= 4) return "One guess left. The word has not moved.";
   if (misses >= 3) return "Have you considered looking at the word?";
   if (misses >= 1) return "Interesting interpretation.";

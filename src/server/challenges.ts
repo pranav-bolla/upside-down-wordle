@@ -25,13 +25,6 @@ function mulberry32(seed: number): () => number {
   };
 }
 
-/** Guesses are case-sensitive, so each word gets a capitalisation. */
-function applyCase(word: string, roll: number): string {
-  if (roll < 0.4) return word;
-  if (roll < 0.7) return word[0].toUpperCase() + word.slice(1);
-  return word.toUpperCase();
-}
-
 /**
  * One word per round, skipping anything played recently in that round, or
  * already hand-picked for a day coming up.
@@ -46,8 +39,7 @@ export function pickWords(day: number, nearby: { day: number; words: string[] }[
     );
     const fresh = pool.filter((word) => !recent.has(word));
     const random = mulberry32(hash(`eldrow:${day}:${round}`));
-    const word = fresh[Math.floor(random() * fresh.length)];
-    return applyCase(word, random());
+    return fresh[Math.floor(random() * fresh.length)];
   });
 }
 
@@ -81,7 +73,8 @@ export async function getChallenge(day: number): Promise<string[]> {
     found = await find();
   }
 
-  const words = found.rows[0].words;
+  // Lowercased on the way out: rows saved while capitals mattered still have them.
+  const words = found.rows[0].words.map((word) => word.toLowerCase());
   cache.set(day, words);
   return words;
 }

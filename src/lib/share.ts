@@ -1,4 +1,4 @@
-import { GAME_NAME, MAX_GUESSES, MAX_SCORE, siteLabel } from "./config";
+import { GAME_NAME, MAX_GUESSES, MAX_SCORE, siteUrl } from "./config";
 import { formatDayNumber } from "./daily";
 import type { GameState } from "./game";
 import { roundEmoji, totalScore } from "./scoring";
@@ -17,13 +17,13 @@ export function buildShareText(game: GameState): string {
     "",
     `🧠 ${score}/${MAX_SCORE}`,
     "",
-    siteLabel(),
+    siteUrl(),
   ].join("\n");
 }
 
 export function buildChallengeText(game: GameState): string {
   const score = totalScore(game.rounds);
-  return `I just scored ${score}/${MAX_SCORE} on a game where you literally read upside-down words. Think you can beat me? 🙃 ${siteLabel()}`;
+  return `I just scored ${score}/${MAX_SCORE} on a game where you literally read upside-down words. Think you can beat me? 🙃 ${siteUrl()}`;
 }
 
 export type ShareOutcome = "shared" | "copied" | "cancelled" | "failed";

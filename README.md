@@ -21,7 +21,7 @@ The tables are created automatically the first time the app talks to the databas
 1. Create a project from this repository.
 2. Add a **Postgres** database to the project.
 3. On the app service, add the variable `DATABASE_URL` = `${{Postgres.DATABASE_URL}}`.
-4. Generate a domain for the service, then set `NEXT_PUBLIC_SITE_URL` to it (e.g. `https://eldrow.up.railway.app`) and redeploy. This is the address printed in shared results, and it is baked in at build time.
+4. Generate a domain for the service and redeploy. Link previews are built with that domain (Railway exposes it as `RAILWAY_PUBLIC_DOMAIN`). If you later use a custom domain, set `NEXT_PUBLIC_SITE_URL` to it (e.g. `https://eldrow.com`) and redeploy.
 
 `railway.json` sets the start command and a health check at `/api/health`, which only passes once the database is reachable.
 
@@ -36,7 +36,7 @@ The tables are created automatically the first time the app talks to the databas
   INSERT INTO daily_challenges (day, words) VALUES (42, ARRAY['Cat', 'PIANO', 'umbrella']);
   ```
 
-  Capitalisation matters: guesses are case-sensitive.
+  Guesses ignore capitalisation, and words are always shown in lowercase.
 
 ## Data
 
