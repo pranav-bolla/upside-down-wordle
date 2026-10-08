@@ -1,26 +1,149 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-track: var(--track);
+  --color-accent: #5757f5;
+  --color-accent-deep: #3d3dcc;
+  --color-accent-ink: var(--accent-ink);
+  --color-good: var(--good);
+  --color-good-deep: var(--good-deep);
+  --color-good-tint: var(--good-tint);
+  --color-bad: #e5484d;
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
+:root {
+  color-scheme: light;
+  --paper: #f8f7f4;
+  --surface: #ffffff;
+  --ink: #202020;
+  --muted: #77756f;
+  --line: #e7e4dd;
+  --track: #e0ddd5;
+  --accent-ink: #5757f5;
+  --good: #1f9d61;
+  --good-deep: #167a4a;
+  --good-tint: #f1faf5;
+}
+
+/* Dark values appear twice: once for the OS preference, once for the toggle. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #121214;
+    --surface: #1c1c20;
+    --ink: #f2f1ed;
+    --muted: #a09e98;
+    --line: #2e2e34;
+    --track: #3a3a41;
+    --accent-ink: #9494ff;
+    --good: #2fb277;
+    --good-deep: #1f8a5a;
+    --good-tint: #14271e;
   }
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #121214;
+  --surface: #1c1c20;
+  --ink: #f2f1ed;
+  --muted: #a09e98;
+  --line: #2e2e34;
+  --track: #3a3a41;
+  --accent-ink: #9494ff;
+  --good: #2fb277;
+  --good-deep: #1f8a5a;
+  --good-tint: #14271e;
+}
+
+html {
+  background: var(--color-paper);
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Chunky, pressable buttons. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  height: 3.5rem;
+  border-radius: 1rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    transform 90ms ease,
+    box-shadow 90ms ease,
+    background-color 160ms ease,
+    filter 160ms ease;
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(3px);
+}
+
+.btn-primary {
+  background: var(--color-accent);
+  color: #fff;
+  box-shadow: 0 4px 0 0 var(--color-accent-deep);
+}
+
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.07);
+}
+
+.btn-primary:active:not(:disabled) {
+  box-shadow: 0 1px 0 0 var(--color-accent-deep);
+}
+
+.btn-good {
+  background: var(--color-good);
+  color: #fff;
+  box-shadow: 0 4px 0 0 var(--color-good-deep);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--color-ink);
+  border: 1px solid var(--color-line);
+  box-shadow: 0 4px 0 0 var(--color-line);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: var(--muted);
+}
+
+.btn-secondary:active:not(:disabled) {
+  box-shadow: 0 1px 0 0 var(--color-line);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+  .btn:active:not(:disabled) {
+    transform: none;
+  }
 }

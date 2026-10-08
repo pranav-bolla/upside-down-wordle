@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# eldroW
 
-## Getting Started
+The daily word game that's harder than it looks. (It isn't.)
 
-First, run the development server:
+Three words a day, each rotated 180°. Type what you see.
+
+## Run it locally
+
+Needs Node 22+ and a Postgres database.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local   # then point DATABASE_URL at your database
+npm install
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The tables are created automatically the first time the app talks to the database.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deploy on Railway
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Create a project from this repository.
+2. Add a **Postgres** database to the project.
+3. On the app service, add the variable `DATABASE_URL` = `${{Postgres.DATABASE_URL}}`.
+4. Generate a domain for the service, then set `NEXT_PUBLIC_SITE_URL` to it (e.g. `https://eldrow.up.railway.app`) and redeploy. This is the address printed in shared results, and it is baked in at build time.
 
-## Learn More
+`railway.json` sets the start command and a health check at `/api/health`, which only passes once the database is reachable.
 
-To learn more about Next.js, take a look at the following resources:
+## How the daily words work
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- The day number is counted in UTC from the launch date in `src/lib/config.ts`.
+- The first request after midnight UTC picks that day's three words and stores them in `daily_challenges`. Every player then reads the same row. No cron job is involved.
+- Words come from the pools in `src/server/words.ts`. A word can't come back in its round until roughly 80% of that pool has been played since.
+- To hand-pick a day, insert its row ahead of time:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+  ```sql
+  INSERT INTO daily_challenges (day, words) VALUES (42, ARRAY['Cat', 'PIANO', 'umbrella']);
+  ```
 
-## Deploy on Vercel
+  Capitalisation matters: guesses are case-sensitive.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Data
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Table | Holds |
+| --- | --- |
+| `daily_challenges` | One row per day: the three words. |
+| `players` | One row per anonymous player, with their statistics and streak. |
+| `games` | One row per player per day: every guess, and the final score. |
+
+Players are identified by a random id in an httpOnly cookie (`src/server/player.ts`); there are no accounts. Theme and reduced-motion preferences stay in the browser.
+
+## Layout
+
+- `src/lib/` — code shared by browser and server: guess rules (`game`), `scoring`, `stats`, `share`, the client `store`.
+- `src/server/` — database access (`db`), word generation (`challenges`), game persistence (`games`).
+- `src/app/api/` — `state` (load today's challenge and progress), `guess` (submit a guess), `health`.
+- `src/components/` — UI. `Game` is the root; `GameCard` and `ResultsScreen` are the two screens.
