@@ -68,7 +68,7 @@ export default async function Image() {
 
         <div style={{ display: "flex", fontSize: 38, letterSpacing: -0.5 }}>
           Three words. All upside down.
-          <span style={{ color: "#77756f", marginLeft: 14 }}>Harder than it looks. (It isn’t.)</span>
+          <span style={{ color: "#77756f", marginLeft: 14 }}>Harder than it looks.</span>
         </div>
       </div>
     ),
